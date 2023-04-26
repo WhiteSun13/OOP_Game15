@@ -51,22 +51,52 @@ namespace OOP_Game15
                 }
             }
         }
-        
+
         public override void Move(object sender, EventArgs e)
         {
             Button button = (Button)sender;
             int bX = button.Location.X / 60;
             int bY = button.Location.Y / 60;
-            if (Math.Abs(spaceX - bX) + Math.Abs(spaceY - bY) != 1) return;
-            buttons[spaceY, spaceX].Text = button.Text;
-            buttons[spaceY, spaceX].Enabled = true;
-            button.Text = "";
-            button.Enabled = false;
-            spaceX = bX;
-            spaceY = bY;
+            if (Math.Abs(buttons[spaceY, spaceX].Location.X / 60 - bX) + Math.Abs(buttons[spaceY, spaceX].Location.Y / 60 - bY) != 1) return;
+            SwapButtons(buttons[spaceY, spaceX], button, 60); // Используем новый SwapButtons с анимацией
             CheckIfSolved();
         }
-        
+
+        private void SwapButtons(Button b1, Button b2, int fps)
+        {
+            int dx = b2.Left - b1.Left;
+            int dy = b2.Top - b1.Top;
+            int steps = 15; // Количество шагов анимации
+            int stepX = dx / steps;
+            int stepY = dy / steps;
+            int currentStep = 0;
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            // Обработчик события Tick таймера
+            timer.Tick += (sender, e) =>
+            {
+                if (currentStep >= steps)
+                {
+                    // Если анимация завершилась, меняем текст и состояние кнопок
+                    string tempText = b1.Text;
+                    bool tempEnabled = b1.Enabled;
+                    b1.Text = b2.Text;
+                    b1.Enabled = b2.Enabled;
+                    b2.Text = tempText;
+                    b2.Enabled = tempEnabled;
+                    timer.Stop();
+                    return;
+                }
+                // Изменяем положение кнопок на шаг анимации
+                b1.Left += stepX;
+                b1.Top += stepY;
+                b2.Left -= stepX;
+                b2.Top -= stepY;
+                currentStep++;
+            };
+            timer.Interval = 1000 / fps;
+            timer.Start();
+        }
+
         public override void CheckIfSolved()
         {
             if (spaceX != gridSize - 1 || spaceY != gridSize - 1) return;
