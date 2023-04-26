@@ -15,7 +15,7 @@ namespace OOP_Game15
         {
             int.TryParse(gridSizeText.Text, out gridSize);
             if (defaultCheck.Checked == false) int.TryParse(emptyBtnText.Text, out emptyBtn);
-            if (gridSize < 2 || gridSize > 10) MessageBox.Show("–азмер пол€ не может быть меньше 3 или больше 10!");
+            if (gridSize < 3 || gridSize > 10) MessageBox.Show("–азмер пол€ не может быть меньше 3 или больше 10!");
             else if (defaultCheck.Checked == false & emptyBtn == 0 | emptyBtn > gridSize * gridSize) MessageBox.Show($"Ќомер пустой клетки не может быть равен 0 или больше {gridSize * gridSize}!");
             else { startGame = true; Close(); }
         }
