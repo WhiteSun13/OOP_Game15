@@ -22,11 +22,11 @@ namespace OOP_Game15
             EmptyButton = emptyButton;
         }
         private int EmptyButton { set; get; }
-
+        int count;
         public override void Initialize()
         {
             buttons = new Button[gridSize, gridSize];
-            int count = 1;
+            count = 1;
             for (int i = 0; i < gridSize; i++)
             {
                 for (int j = 0; j < gridSize; j++)
@@ -58,54 +58,44 @@ namespace OOP_Game15
             int bX = button.Location.X / 60;
             int bY = button.Location.Y / 60;
             if (Math.Abs(buttons[spaceY, spaceX].Location.X / 60 - bX) + Math.Abs(buttons[spaceY, spaceX].Location.Y / 60 - bY) != 1) return;
-            SwapButtons(buttons[spaceY, spaceX], button, 60); // Используем новый SwapButtons с анимацией
-            CheckIfSolved();
+            SwapButtons(buttons[spaceY, spaceX], button, 100);
         }
 
         private void SwapButtons(Button b1, Button b2, int fps)
         {
             int dx = b2.Left - b1.Left;
             int dy = b2.Top - b1.Top;
-            int steps = 15; // Количество шагов анимации
+            int steps = 15;
             int stepX = dx / steps;
             int stepY = dy / steps;
             int currentStep = 0;
             System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-            // Обработчик события Tick таймера
             timer.Tick += (sender, e) =>
             {
                 if (currentStep >= steps)
                 {
-                    // Если анимация завершилась, меняем текст и состояние кнопок
-                    string tempText = b1.Text;
-                    bool tempEnabled = b1.Enabled;
-                    b1.Text = b2.Text;
-                    b1.Enabled = b2.Enabled;
-                    b2.Text = tempText;
-                    b2.Enabled = tempEnabled;
                     timer.Stop();
+                    CheckIfSolved();
                     return;
                 }
-                // Изменяем положение кнопок на шаг анимации
                 b1.Left += stepX;
                 b1.Top += stepY;
                 b2.Left -= stepX;
                 b2.Top -= stepY;
                 currentStep++;
             };
-            timer.Interval = 1000 / fps;
+            timer.Interval = 1;
             timer.Start();
         }
 
         public override void CheckIfSolved()
         {
-            if (spaceX != gridSize - 1 || spaceY != gridSize - 1) return;
             for (int i = 0; i < gridSize; i++)
             {
                 for (int j = 0; j < gridSize; j++)
                 {
-                    if (i == gridSize - 1 && j == gridSize - 1) continue;
-                    if (i * gridSize + j + 1 != int.Parse(buttons[i, j].Text)) return;
+                    if (buttons[i, j].Text == "") continue;
+                    if (int.Parse(buttons[i,j].Text) != (buttons[i, j].Location.X / 60 + buttons[i, j].Location.Y / 60 * gridSize + 1)) return;
                 }
             }
             MessageBox.Show("Вы выиграли!"); Shuffle();
