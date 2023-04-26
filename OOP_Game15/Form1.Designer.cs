@@ -125,7 +125,7 @@
             MaximumSize = new Size(456, 256);
             MinimumSize = new Size(456, 256);
             Name = "Form1";
-            Text = "Form1";
+            Text = "15 (с анимацией)";
             ResumeLayout(false);
             PerformLayout();
         }
