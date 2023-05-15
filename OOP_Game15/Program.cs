@@ -5,9 +5,10 @@ namespace OOP_Game15
         protected Button[,] buttons;
         protected Random random = new Random();
         protected int gridSize { get; }
+        protected int EmptyButton { get; }
         protected int spaceX, spaceY;
         protected Control.ControlCollection controls { get; }
-        public Puzzle(Control.ControlCollection controls, int gridSize) { this.controls = controls; this.gridSize = gridSize; }
+        public Puzzle(Control.ControlCollection controls, int gridSize, int emptyButton) { this.controls = controls; this.gridSize = gridSize; this.EmptyButton = EmptyButton = emptyButton; }
         public abstract void Initialize();
         public abstract void Move(object sender, EventArgs e);
         public abstract void CheckIfSolved();
@@ -16,12 +17,7 @@ namespace OOP_Game15
 
     class Game15 : Puzzle
     {
-        public Game15(Control.ControlCollection controls, int gridSize) : base(controls, gridSize) { EmptyButton = gridSize * gridSize; }
-        public Game15(Control.ControlCollection controls, int gridSize, int emptyButton) : base(controls, gridSize)
-        {
-            EmptyButton = emptyButton;
-        }
-        private int EmptyButton { set; get; }
+        public Game15(Control.ControlCollection controls, int gridSize, int emptyButton) : base(controls, gridSize, emptyButton) { }
         int count;
         public override void Initialize()
         {
@@ -157,7 +153,7 @@ namespace OOP_Game15
             Text = "Игра 15";
             Size = new Size(a * 60 + 25, a * 60 + 50);
             Game15 game;
-            if (b == 0) game = new Game15(Controls,a);
+            if (b == 0) game = new Game15(Controls,a,a*a);
             else game = new Game15(Controls, a, b);
             game.Initialize();
             game.Shuffle();
